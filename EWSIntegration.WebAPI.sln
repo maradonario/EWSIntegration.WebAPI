@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EWSIntegration.WebAPI", "EWSIntegration.WebAPI\EWSIntegration.WebAPI.csproj", "{288AA89A-AC1A-45FD-ACE8-D6EF4420A2BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EWSIntegration.WebAPI.Tests", "EWSIntegration.WebAPI.Tests\EWSIntegration.WebAPI.Tests.csproj", "{708D4D74-C667-4FE9-81E9-970614CAE686}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{288AA89A-AC1A-45FD-ACE8-D6EF4420A2BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{288AA89A-AC1A-45FD-ACE8-D6EF4420A2BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{288AA89A-AC1A-45FD-ACE8-D6EF4420A2BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{288AA89A-AC1A-45FD-ACE8-D6EF4420A2BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{708D4D74-C667-4FE9-81E9-970614CAE686}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{708D4D74-C667-4FE9-81E9-970614CAE686}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{708D4D74-C667-4FE9-81E9-970614CAE686}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{708D4D74-C667-4FE9-81E9-970614CAE686}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
