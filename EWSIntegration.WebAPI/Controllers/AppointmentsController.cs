@@ -2,10 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Web.Http;
-using AppointmentWebApi = EWSIntegration.WebAPI.Models.Appointment;
+using AppointmentWebApi = EWSIntegration.WebAPI.Models.Interview;
 using ResponseWebApi = EWSIntegration.WebAPI.Models.GetAppointmentsResponse;
-using CreateAppointmentRequest = EWSIntegration.WebAPI.Models.CreateAppointmentRequest;
-using CreateAppointmentResponse = EWSIntegration.WebAPI.Models.CreateAppointmentResponse;
+using EWSIntegration.WebAPI.Models;
 namespace EWSIntegration.WebAPI.Controllers
 {
     /// <summary>
@@ -13,6 +12,68 @@ namespace EWSIntegration.WebAPI.Controllers
     /// </summary>
     public class AppointmentsController : ApiController
     {
+        /// <summary>
+        /// Availabilities the specified request.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("api/appointments/availability")]
+        public IHttpActionResult Availability(AvailabilityRequest request)
+        {
+            List<AttendeeInfo> attendees = new List<AttendeeInfo>();
+
+            foreach (var user in request.Users)
+            {
+                attendees.Add(new AttendeeInfo()
+                {
+                    SmtpAddress = user,
+                    AttendeeType = MeetingAttendeeType.Required
+                });
+            }
+
+            // Specify availability options.
+            AvailabilityOptions myOptions = new AvailabilityOptions();
+            myOptions.MeetingDuration = request.DurationMinutes;
+            myOptions.RequestedFreeBusyView = FreeBusyViewType.FreeBusy;
+
+            // Return a set of free/busy times.
+            var service = ExchangeServer.Open();
+            GetUserAvailabilityResults freeBusyResults = service.GetUserAvailability(attendees,
+                                                                                 new TimeWindow(DateTime.Now, DateTime.Now.AddDays(request.NumberOfDaysFromNow)),
+                                                                                     AvailabilityData.FreeBusy,
+                                                                                     myOptions);
+
+            var response = new AvailabilityResponse
+            {
+                AvailabilityResult = new List<AvailabilityUser>()
+            };
+
+
+            foreach (AttendeeAvailability availability in freeBusyResults.AttendeesAvailability)
+            {
+
+                var user = new AvailabilityUser();
+                var avail = new List<TimeBlock>();
+
+                foreach (CalendarEvent calendarItem in availability.CalendarEvents)
+                {
+                    var block = new TimeBlock
+                    {
+                        Start = calendarItem.StartTime,
+                        End = calendarItem.EndTime,
+                        StatusEnum = calendarItem.FreeBusyStatus,
+                        Status = calendarItem.FreeBusyStatus.ToString()
+                    };
+
+                    avail.Add(block);
+                }
+                user.Availability = avail;
+                response.AvailabilityResult.Add(user);
+            }
+
+            return Ok(response);
+        }
         /// <summary>
         /// Gets the appointments starting now to 30 days from now.
         /// </summary>
@@ -24,7 +85,6 @@ namespace EWSIntegration.WebAPI.Controllers
             var endDate = startDate.AddDays(30);
             // Assuming 8 max per day * 5 (days/week) * 4 (weeks/month)
             const int NUM_APPTS = 160;
-
             var calendar = CalendarFolder.Bind(ExchangeServer.Open(), WellKnownFolderName.Calendar, new PropertySet());
             var cView = new CalendarView(startDate, endDate, NUM_APPTS);
             cView.PropertySet = new PropertySet(AppointmentSchema.Subject, AppointmentSchema.Start, AppointmentSchema.End, AppointmentSchema.TimeZone);
@@ -42,7 +102,7 @@ namespace EWSIntegration.WebAPI.Controllers
         }
 
         /// <summary>
-        /// Creates the specified Appointment represented by the request.
+        /// Creates the specified Interview represented by the request.
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns></returns>

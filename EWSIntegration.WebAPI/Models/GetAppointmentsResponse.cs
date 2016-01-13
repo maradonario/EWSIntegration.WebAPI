@@ -17,13 +17,13 @@ namespace EWSIntegration.WebAPI.Models
         /// <value>
         /// The appointments.
         /// </value>
-        public ICollection<Appointment> Appointments { get; set; }
+        public ICollection<Interview> Appointments { get; set; }
     }
 
     /// <summary>
-    /// Appointment
+    /// Interview
     /// </summary>
-    public class Appointment
+    public class Interview
     {
         /// <summary>
         /// Gets or sets the start.

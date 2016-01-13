@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http;
 
 namespace EWSIntegration.WebAPI.Controllers
@@ -22,6 +23,8 @@ namespace EWSIntegration.WebAPI.Controllers
 
             email.Subject = request.Subject;
             email.Body = new MessageBody(request.Body);
+
+
             email.Send();
             return Ok(new SendEmailResponse { Recipients = request.Recipients });
         }

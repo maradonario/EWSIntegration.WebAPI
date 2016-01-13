@@ -60,6 +60,69 @@ namespace EWSIntegration.WebAPI.Tests.Controllers
         // public void MyTestCleanup() { }
         //
         #endregion
+        [TestMethod]
+        public void GetAvailability()
+        {
+            var controller = new AppointmentsController();
+
+            var request = new AvailabilityRequest
+            {
+                DurationMinutes = 60,
+                NumberOfDaysFromNow = 30,
+                Users = new List<string>()
+                {
+                    "mario@rossrmsdemo.onmicrosoft.com"
+                }
+            };
+
+            var result = controller.Availability(request) as OkNegotiatedContentResult<AvailabilityResponse>;
+
+            Assert.IsNotNull(result.Content.Availability);
+            Assert.IsTrue(result.Content.Availability.Count > 0);
+        }
+
+        [TestMethod]
+        public void GetAvailabilityInterviewer()
+        {
+            var controller = new AppointmentsController();
+
+            var request = new AvailabilityRequest
+            {
+                DurationMinutes = 60,
+                NumberOfDaysFromNow = 30,
+                Users = new List<string>()
+                {
+                    "interviewer1@rossrmsdemo.onmicrosoft.com"
+                }
+            };
+
+            var result = controller.Availability(request) as OkNegotiatedContentResult<AvailabilityResponse>;
+
+            Assert.IsNotNull(result.Content.Availability);
+        }
+
+        [TestMethod]
+        public void GetAvailabilityAllInterviewers()
+        {
+            var controller = new AppointmentsController();
+
+            var request = new AvailabilityRequest
+            {
+                DurationMinutes = 60,
+                NumberOfDaysFromNow = 30,
+                Users = new List<string>()
+                {
+                    "interviewer1@rossrmsdemo.onmicrosoft.com",
+                    "interviewer2@rossrmsdemo.onmicrosoft.com",
+                    "mario@rossrmsdemo.onmicrosoft.com"
+                }
+            };
+
+            var result = controller.Availability(request) as OkNegotiatedContentResult<AvailabilityResponse>;
+
+            Assert.IsNotNull(result.Content.Availability);
+            Assert.IsTrue(result.Content.Availability.Count > 0);
+        }
 
         [TestMethod]
         public void GetAppointment()

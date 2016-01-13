@@ -129,9 +129,7 @@
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\EWSConfig.cs" />
@@ -172,6 +170,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AvailabilityRequest.cs" />
+    <Compile Include="Models\AvailabilityResponse.cs" />
     <Compile Include="Models\CreateAppointmentRequest.cs" />
     <Compile Include="Models\CreateAppointmentResponse.cs" />
     <Compile Include="Models\ExchangeServer.cs" />
@@ -208,6 +208,8 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
+    <Content Include="App_Data\Documents\English\Application.docx" />
+    <Content Include="App_Data\Documents\Spanish\Application.docx" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
