@@ -113,7 +113,7 @@ namespace EWSIntegration.WebAPI.Controllers
 
                 }
 
-                list.Add(new Interview { Start = app.Start.ToUniversalTime().ToString(), End = String.Format("{0:g}", app.End), TimeZone = app.TimeZone, Attendees = attendees});
+                list.Add(new Interview { Start = app.Start, End = app.End, TimeZone = app.TimeZone, Attendees = attendees, Subject = app.Subject});
 
             }
             response.Appointments = list;

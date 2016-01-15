@@ -26,12 +26,19 @@ namespace EWSIntegration.WebAPI.Models
     public class Interview
     {
         /// <summary>
+        /// Gets or sets the subject.
+        /// </summary>
+        /// <value>
+        /// The subject.
+        /// </value>
+        public string Subject { get; set; }
+        /// <summary>
         /// Gets or sets the start.
         /// </summary>
         /// <value>
         /// The start.
         /// </value>
-        public string Start { get; set; }
+        public DateTime Start { get; set; }
 
         /// <summary>
         /// Gets or sets the end.
@@ -39,7 +46,7 @@ namespace EWSIntegration.WebAPI.Models
         /// <value>
         /// The end.
         /// </value>
-        public string End { get; set; }
+        public DateTime End { get; set; }
 
         /// <summary>
         /// Gets or sets the time zone.
