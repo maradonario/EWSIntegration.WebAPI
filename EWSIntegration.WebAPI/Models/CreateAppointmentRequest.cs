@@ -51,5 +51,13 @@ namespace EWSIntegration.WebAPI.Models
         /// </value>
         public string Location { get; set; }
 
+        /// <summary>
+        /// Gets or sets the recipients.
+        /// </summary>
+        /// <value>
+        /// The recipients.
+        /// </value>
+        public ICollection<string> Recipients { get; set; }
+
     }
 }

@@ -176,6 +176,7 @@
     <Compile Include="Models\CreateAppointmentResponse.cs" />
     <Compile Include="Models\ExchangeServer.cs" />
     <Compile Include="Models\GetAppointmentsResponse.cs" />
+    <Compile Include="Models\GetAppointmentsRequest.cs" />
     <Compile Include="Models\SendEmailRequest.cs" />
     <Compile Include="Models\SendEmailResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

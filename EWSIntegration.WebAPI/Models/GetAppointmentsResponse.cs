@@ -48,5 +48,44 @@ namespace EWSIntegration.WebAPI.Models
         /// The time zone.
         /// </value>
         public string TimeZone { get; set; }
+
+        /// <summary>
+        /// Gets or sets the attendees.
+        /// </summary>
+        /// <value>
+        /// The attendees.
+        /// </value>
+        public ICollection<RequiredAttendees> Attendees { get; set;}
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class RequiredAttendees
+    {
+        /// <summary>
+        /// Gets or sets the email.
+        /// </summary>
+        /// <value>
+        /// The email.
+        /// </value>
+        public string Email { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the response.
+        /// </summary>
+        /// <value>
+        /// The response.
+        /// </value>
+        public string Response { get; set; }
+    }
+
 }

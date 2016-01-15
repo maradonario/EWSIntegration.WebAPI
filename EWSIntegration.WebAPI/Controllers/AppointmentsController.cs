@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Web.Http;
-using AppointmentWebApi = EWSIntegration.WebAPI.Models.Interview;
-using ResponseWebApi = EWSIntegration.WebAPI.Models.GetAppointmentsResponse;
 using EWSIntegration.WebAPI.Models;
 namespace EWSIntegration.WebAPI.Controllers
 {
@@ -39,8 +37,11 @@ namespace EWSIntegration.WebAPI.Controllers
 
             // Return a set of free/busy times.
             var service = ExchangeServer.Open();
+
+            var startTime = DateTime.Parse(request.Start);
+            var endTime = DateTime.Parse(request.End);
             GetUserAvailabilityResults freeBusyResults = service.GetUserAvailability(attendees,
-                                                                                 new TimeWindow(DateTime.Now, DateTime.Now.AddDays(request.NumberOfDaysFromNow)),
+                                                                                 new TimeWindow(startTime, endTime),
                                                                                      AvailabilityData.FreeBusy,
                                                                                      myOptions);
 
@@ -52,7 +53,6 @@ namespace EWSIntegration.WebAPI.Controllers
 
             foreach (AttendeeAvailability availability in freeBusyResults.AttendeesAvailability)
             {
-
                 var user = new AvailabilityUser();
                 var avail = new List<TimeBlock>();
 
@@ -78,24 +78,43 @@ namespace EWSIntegration.WebAPI.Controllers
         /// Gets the appointments starting now to 30 days from now.
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        public IHttpActionResult Get()
+        [HttpPost]
+        [Route("api/appointments/details")]
+        public IHttpActionResult GetDetails(GetAppointmentsRequest request)
         {
-            var startDate = DateTime.Now;
-            var endDate = startDate.AddDays(30);
+            var startDate = DateTime.Parse(request.Start);
+            var endDate = DateTime.Parse(request.End);
             // Assuming 8 max per day * 5 (days/week) * 4 (weeks/month)
             const int NUM_APPTS = 160;
             var calendar = CalendarFolder.Bind(ExchangeServer.Open(), WellKnownFolderName.Calendar, new PropertySet());
             var cView = new CalendarView(startDate, endDate, NUM_APPTS);
             cView.PropertySet = new PropertySet(AppointmentSchema.Subject, AppointmentSchema.Start, AppointmentSchema.End, AppointmentSchema.TimeZone);
 
+
+
             FindItemsResults<Appointment> appointments = calendar.FindAppointments(cView);
 
-            var response = new ResponseWebApi();
-            var list = new List<AppointmentWebApi>();
+            var response = new GetAppointmentsResponse();
+            var list = new List<Interview>();
             foreach(var app in appointments)
             {
-                list.Add(new AppointmentWebApi { Start = app.Start.ToUniversalTime().ToString(), End = String.Format("{0:g}", app.End), TimeZone = app.TimeZone});
+                var appointment = Appointment.Bind(ExchangeServer.Open(), app.Id);
+
+                var attendees = new List<RequiredAttendees>();
+                foreach (var required in appointment.RequiredAttendees)
+                {
+                    attendees.Add(new RequiredAttendees
+                    {
+                        Name = required.Name,
+                        Email = required.Address,
+                        Response = required.ResponseType.ToString()
+                    });
+
+
+                }
+
+                list.Add(new Interview { Start = app.Start.ToUniversalTime().ToString(), End = String.Format("{0:g}", app.End), TimeZone = app.TimeZone, Attendees = attendees});
+
             }
             response.Appointments = list;
             return Ok(response);
@@ -121,6 +140,11 @@ namespace EWSIntegration.WebAPI.Controllers
             //appointment.EndTimeZone = TimeZoneInfo.Local;
             appointment.Location = request.Location;
             //appointment.ReminderDueBy = DateTime.Now;
+
+            foreach(var email in request.Recipients)
+            {
+                appointment.RequiredAttendees.Add(email);
+            }
 
             // Save the appointment to your calendar.
             appointment.Save(SendInvitationsMode.SendOnlyToAll);

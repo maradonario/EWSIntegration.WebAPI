@@ -65,10 +65,13 @@ namespace EWSIntegration.WebAPI.Tests.Controllers
         {
             var controller = new AppointmentsController();
 
+            var start = new DateTime(2016, 1, 15, 13, 0, 0);
+            var end = start.AddDays(40);
             var request = new AvailabilityRequest
             {
                 DurationMinutes = 60,
-                NumberOfDaysFromNow = 30,
+                Start = start.ToString(),
+                End = end.ToString(),
                 Users = new List<string>()
                 {
                     "mario@rossrmsdemo.onmicrosoft.com"
@@ -77,19 +80,21 @@ namespace EWSIntegration.WebAPI.Tests.Controllers
 
             var result = controller.Availability(request) as OkNegotiatedContentResult<AvailabilityResponse>;
 
-            Assert.IsNotNull(result.Content.Availability);
-            Assert.IsTrue(result.Content.Availability.Count > 0);
+            Assert.IsNotNull(result.Content.AvailabilityResult);
+            Assert.IsTrue(result.Content.AvailabilityResult.Count > 0);
         }
 
         [TestMethod]
         public void GetAvailabilityInterviewer()
         {
             var controller = new AppointmentsController();
-
+            var start = new DateTime(2016, 1, 15, 13, 0, 0);
+            var end = start.AddDays(40);
             var request = new AvailabilityRequest
             {
                 DurationMinutes = 60,
-                NumberOfDaysFromNow = 30,
+                Start = start.ToString(),
+                End = end.ToString(),
                 Users = new List<string>()
                 {
                     "interviewer1@rossrmsdemo.onmicrosoft.com"
@@ -98,18 +103,20 @@ namespace EWSIntegration.WebAPI.Tests.Controllers
 
             var result = controller.Availability(request) as OkNegotiatedContentResult<AvailabilityResponse>;
 
-            Assert.IsNotNull(result.Content.Availability);
+            Assert.IsNotNull(result.Content.AvailabilityResult);
         }
 
         [TestMethod]
         public void GetAvailabilityAllInterviewers()
         {
             var controller = new AppointmentsController();
-
+            var start = new DateTime(2016, 1, 15, 13, 0, 0);
+            var end = start.AddDays(40);
             var request = new AvailabilityRequest
             {
                 DurationMinutes = 60,
-                NumberOfDaysFromNow = 30,
+                Start = start.ToString(),
+                End = start.ToString(),
                 Users = new List<string>()
                 {
                     "interviewer1@rossrmsdemo.onmicrosoft.com",
@@ -120,8 +127,8 @@ namespace EWSIntegration.WebAPI.Tests.Controllers
 
             var result = controller.Availability(request) as OkNegotiatedContentResult<AvailabilityResponse>;
 
-            Assert.IsNotNull(result.Content.Availability);
-            Assert.IsTrue(result.Content.Availability.Count > 0);
+            Assert.IsNotNull(result.Content.AvailabilityResult);
+            Assert.IsTrue(result.Content.AvailabilityResult.Count > 0);
         }
 
         [TestMethod]
@@ -129,7 +136,12 @@ namespace EWSIntegration.WebAPI.Tests.Controllers
         {
             var controller = new AppointmentsController();
 
-            var result = controller.Get() as  OkNegotiatedContentResult<GetAppointmentsResponse>;
+            var request = new GetAppointmentsRequest
+            {
+                Start = DateTime.UtcNow.ToString(),
+                End = DateTime.UtcNow.AddDays(30).ToString()
+            };
+            var result = controller.GetDetails(request) as  OkNegotiatedContentResult<GetAppointmentsResponse>;
 
             Assert.IsNotNull(result.Content.Appointments);
         }
@@ -139,7 +151,7 @@ namespace EWSIntegration.WebAPI.Tests.Controllers
         {
             var controller = new AppointmentsController();
 
-            var start = new DateTime(2016, 1, 14, 13, 0, 0);
+            var start = new DateTime(2016, 1, 15, 13, 0, 0);
             var end = start.AddHours(2);
             var request = new CreateAppointmentRequest
             {
@@ -147,7 +159,8 @@ namespace EWSIntegration.WebAPI.Tests.Controllers
                 Location = "Cconference Room",
                 Subject = "Appointment Unit Test",
                 Start = start.ToString(),
-                End = end.ToString()
+                End = end.ToString(),
+                Recipients = new List<string> { "interviewer1@rossrmsdemo.onmicrosoft.com" }
             };
 
             var result = controller.Create(request) as OkNegotiatedContentResult<CreateAppointmentResponse>;
